@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlowAura Cosmetics | Luxury AI Support</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- PINTEREST "NUDE LUXURY" PALETTE --- */
+        :root { 
+            --bg-nude: #F4F0EA;       /* Warm, creamy beige */
+            --text-dark: #3E3328;     /* Deep Espresso Brown (Softer than black) */
+            --luxury-accent: #A68A68; /* Muted Taupe/Warm Gold */
+            --card-white: #FFFFFF;    
+            --shadow-soft: 0 20px 40px rgba(62, 51, 40, 0.06);
+            --border-soft: 1px solid #EBE5DA;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background-color: var(--bg-nude); color: var(--text-dark); overflow-x: hidden; scroll-behavior: smooth; }
+        
+        /* Editorial Typography */
+        h1, h2, h3, h4 { font-family: 'Playfair Display', serif; font-weight: 500; color: var(--text-dark); letter-spacing: 0.5px; }
+        p { font-weight: 300; letter-spacing: 0.3px; line-height: 1.8; }
+        
+        /* Ultra-Soft Cards */
+        .glass-card { background: var(--card-white); border-radius: 30px; padding: 40px; box-shadow: var(--shadow-soft); border: var(--border-soft); transition: transform 0.5s ease, box-shadow 0.5s ease; }
+        .glass-card:hover { transform: translateY(-5px); box-shadow: 0 25px 50px rgba(62, 51, 40, 0.1); }
+        
+        /* --- ANIMATIONS (UP, LEFT, RIGHT) --- */
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 1.2s cubic-bezier(0.4, 0, 0, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        
+        .reveal-left { opacity: 0; transform: translateX(-80px); transition: all 1.2s cubic-bezier(0.4, 0, 0, 1); }
+        .reveal-left.active { opacity: 1; transform: translateX(0); }
+
+        .reveal-right { opacity: 0; transform: translateX(80px); transition: all 1.2s cubic-bezier(0.4, 0, 0, 1); }
+        .reveal-right.active { opacity: 1; transform: translateX(0); }
+
+        /* NAVBAR - Adapts to Nude background */
+        nav { position: fixed; top: 0; width: 100%; padding: 25px 50px; display: flex; justify-content: space-between; align-items: center; z-index: 1000; transition: 0.5s ease; }
+        nav.scrolled { background: rgba(244, 240, 234, 0.95); backdrop-filter: blur(15px); box-shadow: 0 4px 30px rgba(0,0,0,0.03); padding: 15px 50px; }
+        .logo { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: #FFF; transition: color 0.5s; letter-spacing: 1px; }
+        nav.scrolled .logo { color: var(--text-dark); }
+        .nav-links a { color: #FFF; text-decoration: none; margin-left: 35px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1.5px; transition: color 0.3s; }
+        nav.scrolled .nav-links a { color: var(--text-dark); }
+        .nav-links a:hover { color: var(--luxury-accent); }
+
+        /* --- HERO VIDEO (Stays exactly the same) --- */
+        .hero { position: relative; height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; overflow: hidden; }
+        .hero-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; pointer-events: none; }
+        .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(18,18,18,0.3), rgba(18,18,18,0.7)); z-index: 2; }
+        .hero-content { position: relative; z-index: 3; max-width: 800px; }
+        .hero-content h1 { font-size: 4.8rem; color: #FFF; margin-bottom: 20px; text-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+        .hero-content p { font-size: 1.1rem; letter-spacing: 3px; margin-bottom: 45px; text-transform: uppercase; color: #F0F0F0; }
+        
+        /* Pill-shaped Buttons */
+        .btn-gold { background: var(--luxury-accent); color: #FFF; padding: 18px 45px; border: none; border-radius: 50px; font-weight: 400; letter-spacing: 1.5px; font-size: 0.9rem; text-transform: uppercase; cursor: pointer; text-decoration: none; display: inline-block; transition: 0.4s; }
+        .btn-gold:hover { background: var(--text-dark); transform: translateY(-2px); }
+
+        /* SECTIONS */
+        section { padding: 120px 10vw; }
+        .section-title { text-align: center; font-size: 2.8rem; margin-bottom: 60px; color: var(--text-dark); letter-spacing: 1px; }
+        
+        /* 3-COLUMN IMAGE GRID */
+        .features-grid { 
+    display: grid; 
+    grid-template-columns: repeat(3, 1fr); /* Forces exactly 3 equal columns on the same line */
+    gap: 40px; 
+    align-items: center; /* Keeps them perfectly aligned in the middle */
+}
+
+/* Makes sure it still looks good on mobile phones */
+@media (max-width: 768px) {
+    .features-grid { grid-template-columns: 1fr; }
+}
+        .feature-image-card { border-radius: 30px; overflow: hidden; box-shadow: var(--shadow-soft); transition: transform 0.5s ease; background: transparent; }
+        .feature-image-card:hover { transform: translateY(-10px); box-shadow: 0 30px 60px rgba(62, 51, 40, 0.12); }
+        .feature-image-card img { width: 100%; height: 100%; display: block; object-fit: cover; }
+
+        /* CHAT UI */
+        .chat-container { display: flex; gap: 50px; align-items: stretch; }
+        .chat-info { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+        .chat-info h3 { font-size: 2.4rem; margin-bottom: 25px; line-height: 1.2; }
+        .chat-info p { color: #6A6055; font-size: 1.05rem; }
+        
+        .chat-app { flex: 1.2; display: flex; flex-direction: column; height: 600px; padding: 0; overflow: hidden; }
+        .chat-box { flex: 1; overflow-y: auto; padding: 30px; display: flex; flex-direction: column; gap: 20px; background: #FCFBF9; }
+        
+        .msg { padding: 16px 24px; border-radius: 25px; max-width: 80%; font-size: 0.95rem; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+        .msg.user { background: var(--text-dark); color: #FFF; align-self: flex-end; border-bottom-right-radius: 5px; }
+        .msg.ai { background: #FFF; color: var(--text-dark); align-self: flex-start; border-bottom-left-radius: 5px; border: var(--border-soft); }
+        
+        .chips { display: flex; flex-wrap: wrap; gap: 10px; padding: 20px 30px; background: #FFF; border-top: var(--border-soft); }
+        .chip { background: var(--bg-nude); border: none; color: var(--text-dark); padding: 10px 20px; border-radius: 30px; font-size: 0.85rem; font-family: 'Poppins'; cursor: pointer; transition: 0.3s; }
+        .chip:hover { background: var(--luxury-accent); color: #FFF; }
+        
+        .chat-input-area { display: flex; padding: 10px 30px 30px; gap: 15px; background: #FFF; }
+        .chat-input-area input { flex: 1; background: #F9F8F6; border: var(--border-soft); color: var(--text-dark); padding: 18px 25px; border-radius: 40px; outline: none; font-family: 'Poppins'; font-size: 0.95rem; }
+        .chat-input-area input:focus { border-color: var(--luxury-accent); background: #FFF; }
+        .chat-input-area button { background: var(--text-dark); border: none; width: 55px; height: 55px; border-radius: 50%; color: #FFF; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; }
+        .chat-input-area button:hover { background: var(--luxury-accent); transform: scale(1.05); }
+
+        /* ADMIN UI */
+        .admin-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 50px; }
+        .stat-card { text-align: center; padding: 40px 20px; }
+        .stat-card h4 { font-size: 2.5rem; color: var(--text-dark); margin-bottom: 10px; }
+        .stat-card p { font-size: 0.85rem; color: #8A7E72; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .admin-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .file-upload-wrapper input[type="file"] { display: block; width: 100%; padding: 15px; margin-bottom: 25px; border: 2px dashed #EBE5DA; background: #FCFBF9; border-radius: 15px; font-family: 'Poppins'; color: #8A7E72; cursor: pointer; }
+        
+        .ticket-item { background: #FCFBF9; border-left: 4px solid var(--luxury-accent); padding: 20px; margin-bottom: 15px; border-radius: 0 15px 15px 0; border: var(--border-soft); border-left: 4px solid var(--luxury-accent); }
+        
+        footer { text-align: center; padding: 60px; background: var(--bg-nude); border-top: var(--border-soft); }
+        footer .socials i { font-size: 1.5rem; margin: 0 15px; color: var(--luxury-accent); cursor: pointer; transition: 0.3s; }
+        footer .socials i:hover { color: var(--text-dark); transform: translateY(-3px); }
+    </style>
+</head>
+<body>
+
+    <nav id="navbar">
+        <div class="logo">GlowAura</div>
+        <div class="nav-links">
+            <a href="#home">Home</a>
+            <a href="#features">The Standard</a>
+            <a href="#assistant">AI Advisor</a>
+            <a href="#admin">Dashboard</a>
+        </div>
+    </nav>
+
+    <!-- 1. VIDEO HERO SECTION -->
+    <section id="home" class="hero">
+        <video class="hero-video" autoplay loop muted playsinline>
+            <source src="/static/bg-video.mp4" type="video/mp4">
+        </video>
+        <div class="overlay"></div>
+        <div class="hero-content reveal active">
+            <h1>GlowAura Cosmetics</h1>
+            <p>Your Intelligent Beauty Advisor</p>
+            <a href="#assistant" class="btn-gold">Begin Consultation</a>
+        </div>
+    </section>
+
+    <!-- 2. IMAGE FEATURES SECTION (Drag your 3 PNGs into the static folder to use this!) -->
+    <section id="features">
+        <h2 class="section-title reveal">The GlowAura Standard</h2>
+        <div class="features-grid">
+            
+            <!-- IMAGE 1: Slides from Left -->
+            <div class="feature-image-card reveal-left">
+                <!-- Change "1.png" to the actual name of your first image -->
+                <img src="https://i.ibb.co/ymhyhMby/Chat-GPT-Image-Jun-29-2026-09-50-19-PM.png" alt="Clean Ingredients">
+            </div>
+
+            <!-- IMAGE 2: Slides from Right -->
+            <div class="feature-image-card reveal-right">
+                <!-- Change "2.png" to the actual name of your second image -->
+                <img src="https://i.ibb.co/Dfkgc8tD/AI-Intelligence.png" alt="AI Intelligence">
+            </div>
+
+            <!-- IMAGE 3: Slides from Left -->
+            <div class="feature-image-card reveal-left">
+                <!-- Change "3.png" to the actual name of your third image -->
+                <img src="https://i.ibb.co/fYH6TrNj/respoke.png" alt="Concierge Support">
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 3. AI CHATBOT -->
+    <section id="assistant">
+        <h2 class="section-title reveal">Consult Your Beauty Advisor</h2>
+        <div class="chat-container reveal">
+            <div class="chat-info">
+                <h3>Expert Guidance,<br>Instantly Delivered.</h3>
+                <p>Experience the future of personalized skincare. Our intelligent AI advisor is trained on our complete product catalog, ingredient lists, and clinical research to assist you perfectly.</p>
+                <p>Should your inquiry require a delicate human touch, the AI will elegantly escalate your session to our concierge team.</p>
+            </div>
+            <div class="glass-card chat-app">
+                <div class="chat-box" id="chat-box">
+                    <div class="msg ai">Welcome to GlowAura. How may I assist your beauty journey today?</div>
+                </div>
+                <div class="chips">
+                    <button class="chip" onclick="sendChip('Recommend a moisturizer')">Recommend a routine</button>
+                    <button class="chip" onclick="sendChip('What is your return policy?')">Returns & Refunds</button>
+                    <button class="chip" onclick="sendChip('Are your products vegan?')">Ingredient Ethos</button>
+                </div>
+                <div class="chat-input-area">
+                    <input type="text" id="user-input" placeholder="Type your inquiry here..." onkeypress="handleEnter(event)">
+                    <button onclick="sendMessage()"><i class="fa-solid fa-arrow-up"></i></button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. ADMIN DASHBOARD -->
+    <section id="admin">
+        <h2 class="section-title reveal">Executive Dashboard</h2>
+        <div class="admin-grid reveal">
+            <div class="glass-card stat-card"><h4>$18k</h4><p>Daily Revenue</p></div>
+            <div class="glass-card stat-card"><h4>142</h4><p>Active Consultations</p></div>
+            <div class="glass-card stat-card"><h4>4.9</h4><p>Client Satisfaction</p></div>
+            <div class="glass-card stat-card"><h4>100%</h4><p>AI Uptime</p></div>
+        </div>
+        <div class="admin-controls reveal">
+            <div class="glass-card">
+                <h3 style="margin-bottom:15px; font-size:1.8rem;">Train Knowledge Base</h3>
+                <p style="color:#8A7E72; margin-bottom:25px; font-size:0.95rem;">Upload new policy documents or product updates to instantly retrain the AI.</p>
+                <div class="file-upload-wrapper">
+                    <input type="file" id="file-input">
+                    <button class="btn-gold" style="padding: 14px 30px; font-size: 0.8rem;" onclick="uploadFile()">Update AI Brain</button>
+                    <p id="upload-status" style="margin-top:15px; font-size:0.9rem; font-weight:500;"></p>
+                </div>
+            </div>
+            <div class="glass-card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px;">
+                    <h3 style="font-size:1.8rem;">Active Escalations</h3>
+                    <button class="btn-gold" style="padding: 10px 25px; font-size: 0.8rem; background: var(--text-dark);" onclick="loadTickets()">Refresh</button>
+                </div>
+                <div id="tickets-container" style="max-height: 250px; overflow-y:auto; padding-right:15px;">
+                    <p style="color:#A4998E; font-style:italic;">Click refresh to view open human tickets.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <h2 style="margin-bottom: 20px; font-size: 2rem;">GlowAura</h2>
+        <div class="socials">
+            <i class="fa-brands fa-instagram"></i>
+            <i class="fa-brands fa-pinterest"></i>
+            <i class="fa-brands fa-tiktok"></i>
+        </div>
+        <p style="color:#A4998E; margin-top:20px; font-size:0.9rem;">&copy; 2024 GlowAura Intelligent Support. All rights reserved.</p>
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal, .reveal-left, .reveal-right");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                if (elementTop < windowHeight - 100) reveals[i].classList.add("active");
+            }
+        }
+        window.addEventListener("scroll", reveal); reveal();
+        
+        window.addEventListener("scroll", function() {
+            var nav = document.getElementById("navbar");
+            if (window.scrollY > 50) nav.classList.add("scrolled"); else nav.classList.remove("scrolled");
+        });
+
+        function handleEnter(e) { if(e.key === 'Enter') sendMessage(); }
+        function sendChip(text) { document.getElementById('user-input').value = text; sendMessage(); }
+
+        async function sendMessage() {
+            const input = document.getElementById('user-input');
+            const message = input.value.trim();
+            if(!message) return;
+            const chatBox = document.getElementById('chat-box');
+            chatBox.innerHTML += `<div class="msg user">${message}</div>`;
+            input.value = ''; chatBox.scrollTop = chatBox.scrollHeight;
+
+            try {
+                const res = await fetch('/ask', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_id: "VIP_Client", message: message })
+                });
+                const data = await res.json();
+                chatBox.innerHTML += `<div class="msg ai">${data.ai_response}</div>`;
+                chatBox.scrollTop = chatBox.scrollHeight;
+            } catch(e) { chatBox.innerHTML += `<div class="msg ai" style="color:#ff4d4d;">System error.</div>`; }
+        }
+
+        async function uploadFile() {
+            const file = document.getElementById('file-input').files[0];
+            if(!file) return alert("Select a document.");
+            const formData = new FormData(); formData.append("file", file);
+            
+            const status = document.getElementById('upload-status');
+            status.innerText = "Training AI..."; status.style.color = "var(--luxury-accent)";
+            
+            try {
+                const res = await fetch('/admin/upload', { method: 'POST', body: formData });
+                status.innerText = "✓ AI Updated Successfully"; status.style.color = "#2B2824";
+            } catch(e) { status.innerText = "Error updating AI."; status.style.color = "#ff4d4d"; }
+        }
+
+        async function loadTickets() {
+            const container = document.getElementById('tickets-container');
+            try {
+                const res = await fetch('/tickets');
+                const tickets = await res.json();
+                container.innerHTML = '';
+                if(tickets.length === 0) { container.innerHTML = `<p style="color:#A4998E;">No active escalations.</p>`; return; }
+                tickets.reverse().forEach(t => {
+                    container.innerHTML += `<div class="ticket-item"><strong>Ticket #${t.id} (${t.status})</strong><br><span style="font-size:0.85rem; color:#8A7E72;">Client: ${t.customer_name}</span><br><span style="font-size:0.95rem; color:var(--text-dark);">${t.issue_summary}</span></div>`;
+                });
+            } catch(e) { container.innerHTML = `<p style="color:#ff4d4d;">Failed to load tickets.</p>`; }
+        }
+    </script>
+</body>
+</html>

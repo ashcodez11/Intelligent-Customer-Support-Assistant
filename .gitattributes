@@ -1,0 +1,7 @@
+# Ignore media/assets from GitHub language stats
+*.mp4 linguist-vendored
+*.jpg linguist-vendored
+*.jpeg linguist-vendored
+*.png linguist-vendored
+*.gif linguist-vendored
+*.db linguist-vendored
